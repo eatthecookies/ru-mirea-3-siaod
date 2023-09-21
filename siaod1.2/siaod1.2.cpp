@@ -60,7 +60,31 @@ int main()
         }
         case 2:
         {
-            vector <unsigned char> bitVector;
+            vector <unsigned char> bitVector(8);
+
+            for (int i = 0; i < 64; i++)
+            {
+                array.push_back(63 - i);
+            }
+            
+            for (auto i : array)
+                bitVector[(63 - i) / 8] |= 1 << ((63 - i) % 8);
+
+            // "распаковка" битовой последовательности в массив
+            unsigned char mask;
+            int counter = 0;
+            for (int i = 0; i < 64; i++)
+            {
+                mask = 1 << ((63 - i) % 8);
+                if ((mask & bitVector[(63 - i) / 8]) != 0)
+                    array[counter++] = i;
+            }
+            
+            // печать массива
+            for (int i = 0; i < 64; i++)
+                cout << array[i] << " ";
+            cout << endl;
+
             break;
         }
         case 3:
