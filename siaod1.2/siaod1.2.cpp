@@ -66,6 +66,11 @@ int main()
             {
                 array.push_back(63 - i);
             }
+
+            cout << "Исходный массив: ";
+            for (int i = 0; i < 64; i++)
+                cout << array[i] << " ";
+            cout << endl;
             
             for (auto i : array)
                 bitVector[(63 - i) / 8] |= 1 << ((63 - i) % 8);
@@ -80,6 +85,8 @@ int main()
                     array[counter++] = i;
             }
             
+            cout << "Отсортированный массив: ";
+ 
             // печать массива
             for (int i = 0; i < 64; i++)
                 cout << array[i] << " ";
