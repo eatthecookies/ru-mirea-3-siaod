@@ -2,6 +2,7 @@
 #include <vector>
 #include <bitset>
 #include <fstream>
+#include <chrono>
 using namespace std;
 
 int main()
@@ -57,6 +58,7 @@ int main()
             vector <unsigned char> bitVector(16);
             ifstream fin2("fileinput100.txt");
             ofstream fout2("fileoutput100.txt");
+            auto start_time = std::chrono::high_resolution_clock::now();
 
             int n = 0, i = 0;
             while (!fin2.eof())
@@ -75,7 +77,9 @@ int main()
                 if ((mask & bitVector[(127 - i) / 8]) != 0)
                     fout2 << i << endl;
             }
-
+            auto end_time = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+            std::cout << "Программа выполнялась " << duration.count() << "ms" << std::endl;
 
             break;
         }
@@ -84,6 +88,7 @@ int main()
             vector <unsigned char> bitVector(128);
             ifstream fin3("fileinput1000.txt");
             ofstream fout3("fileoutput1000.txt");
+            auto start_time = std::chrono::high_resolution_clock::now();
 
             int n = 0, i = 0;
             while (!fin3.eof())
@@ -102,6 +107,9 @@ int main()
                 if ((mask & bitVector[(1023 - i) / 8]) != 0)
                     fout3 << i << endl;
             }
+            auto end_time = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+            std::cout << "Программа выполнялась " << duration.count() << "ms" << std::endl;
 
 
             break;
@@ -112,6 +120,7 @@ int main()
             vector <unsigned char> bitVector(18750);
             ifstream fin4("fileinput1mb.txt");
             ofstream fout4("fileoutput1mb.txt");
+            auto start_time = std::chrono::high_resolution_clock::now();
 
             int n = 0, i = 0;
             while (!fin4.eof())
@@ -130,7 +139,9 @@ int main()
                 if ((mask & bitVector[(150000 - 1 - i) / 8]) != 0)
                     fout4 << i << endl;
             }
-
+            auto end_time = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+            std::cout << "Программа выполнялась " << duration.count() << "ms" << std::endl;
 
             break;
         }
