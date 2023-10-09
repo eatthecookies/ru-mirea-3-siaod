@@ -7,23 +7,16 @@ using namespace std;
 
 struct Owner
 {
-	int key = 0;
-	string address = " ";
-	Owner();
-	Owner(int key, string address);
+	unsigned int key = 0;
+	string address = "lorem-ipsum-adress";
 };
 
-struct Table
-{
-	int n = 0;
-	Owner* p = nullptr;
-};
 
-Owner binaryOptimizedSearch(Table& table, int key);
-Owner linearSearch(Table& table, int key);
-Owner barrierSearch(Table& table, int key);
+void createBinFile(ifstream& iftxt, ofstream& ofbin);
+void readBinFile(ifstream& ofbin);
+void outputBinFile(ifstream& ofbin);
+Owner binaryOptimizedSearch(int key);
+Owner linearSearch(ifstream& ifbin, unsigned int key);
 
-void createTable(Table& table, int n);
-void createTableBS(Table& table, int n);
 
-void printTable(Table& table);
+

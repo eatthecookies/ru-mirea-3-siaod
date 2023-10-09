@@ -1,50 +1,51 @@
 ﻿#include <iostream>
-using namespace std;
-
-int main()
-{
-    int inp;
-    cout << "Меню." << endl;
-    cout << "1. " << endl;
-    cout << "2. " << endl;
-    cout << "3. " << endl;
-    cout << "4. " << endl;
-    cout << "5. " << endl;
-    cin >> inp;
-
-    switch (inp)
-    {
-    case 1:
-        
-    case 2:
-
-    case 3:
-
-    case 4:
-
-    case 5:
-
-    };
-       
-}
-
-
-#include <iostream>
 #include "Owner.h"
 #include <chrono>
+#include <fstream>
 using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 using std::chrono::milliseconds;
 
+
 int main()
 {
+    /*ofstream oftxt("test100.txt");
+    
+    if (!oftxt.is_open()) {
+        cout << "Не удалось открыть файл" << endl;
+        return 1;
+    }
 
-    const int UP = 1000000;
-    Table table;
+    for (int i = 0; i < 100; i++)
+    {
+        Owner value;
+        value.key = rand() % 999999999 + 1000000000;
+        oftxt << value.key << " " << value.address << endl;
+    }
+    oftxt.close();
+
+    ofstream ofbin("test100.bin", ios::binary);
+    ifstream iftxt("test100.txt");
+
+    if (ofbin.is_open() && iftxt.is_open())
+    {
+        createBinFile(iftxt, ofbin);
+    }
+    */
+
+    ifstream ifbin("test100.bin", ios::binary);
+
+    outputBinFile(ifbin);
+
+   /*Owner result;
+    int searchKey = 1000016541;
+    result = linearSearch(ifbin, searchKey);
+
+    cout << result.key << result.address;*/
 
 
-    for (int i = 100; i <= UP; i *= 10)
+    /*for (int i = 100; i <= UP; i *= 10)
     {
         createTable(table, i);
 
@@ -57,38 +58,7 @@ int main()
         cout << "Elapsed time on " << i << " is " << ms_double.count() << "ms\n";
 
         delete[]table.p;
-    }
+    }*/
 
-
-    for (int i = 100; i <= UP; i *= 10)
-    {
-        createTableBS(table, i);
-
-        auto t1 = chrono::high_resolution_clock::now();
-        barrierSearch(table, i - 1);
-        auto t2 = chrono::high_resolution_clock::now();
-
-        duration<double, std::milli> ms_double = t2 - t1;
-
-        cout << "Elapsed time on " << i << " is " << ms_double.count() << "ms\n";
-
-        //delete[] table.p;
-    }
-
-
-    for (int i = 100; i <= UP; i *= 10)
-    {
-        createTable(table, i);
-
-        auto t1 = chrono::high_resolution_clock::now();
-        binaryOptimizedSearch(table, i - 1);
-        auto t2 = chrono::high_resolution_clock::now();
-
-        duration<double, std::milli> ms_double = t2 - t1;
-
-        cout << "Elapsed time on " << i << " is " << ms_double.count() << "ms\n";
-
-        delete[]table.p;
-    }
 
 }
