@@ -7,35 +7,15 @@ void createBinFile(ifstream& iftxt, ofstream& ofbin)
 {
 	Owner value;
 
-
-
 	while (!iftxt.eof()) 
 	{
 		iftxt >> value.key >> value.address;
-		ofbin.write(reinterpret_cast<const char*>(&value), sizeof(value));
+
+		ofbin.write((char*)(&value), sizeof(value));
 	}
 
 	ofbin.close();
 	iftxt.close();
-}
-
-Owner linearSearch(ifstream& ifbin, unsigned int key)
-{
-	int i = 0;
-	Owner value;
-	ifbin.read((char*)&value, sizeof(value));
-
-	while (!ifbin.eof())
-	{
-		if (value.key == key)
-		{
-			ifbin.close();
-			return value;
-		}
-		ifbin.read((char*)&value, sizeof(value));
-	}
-	ifbin.close();
-	cout << "выхожу..";
 }
 
 void outputBinFile(ifstream& ifbin)
@@ -48,7 +28,10 @@ void outputBinFile(ifstream& ifbin)
 
 	while (ifbin.read((char*)&value, sizeof(value)))
 	{
-		cout << value.key << " " << value.address << endl;
+		string s = value.address;
+
+		if (s != "")
+			cout << value.key << " " << value.address << endl;
 	}
 
 	if (!ifbin.eof() && ifbin.fail()) {
@@ -57,6 +40,30 @@ void outputBinFile(ifstream& ifbin)
 
 	ifbin.close();
 }
+
+
+Owner linearSearch(ifstream& ifbin, unsigned int key)
+{
+	int i = 0;
+	Owner value;
+
+	ifbin.read((char*)&value, sizeof(value));
+
+	while (!ifbin.eof())
+	{
+		if (value.key == key)
+		{
+			ifbin.close();
+			return value;
+		}
+		ifbin.read((char*)&value, sizeof(value));
+	}
+	ifbin.close();
+}
+
+
+
+
 
 //Owner binaryOptimizedSearch(int key)
 //{

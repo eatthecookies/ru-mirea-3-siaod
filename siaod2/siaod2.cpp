@@ -10,7 +10,7 @@ using std::chrono::milliseconds;
 
 int main()
 {
-    /*ofstream oftxt("test100.txt");
+    ofstream oftxt("test100.txt");
     
     if (!oftxt.is_open()) {
         cout << "Не удалось открыть файл" << endl;
@@ -25,6 +25,7 @@ int main()
     }
     oftxt.close();
 
+
     ofstream ofbin("test100.bin", ios::binary);
     ifstream iftxt("test100.txt");
 
@@ -32,17 +33,23 @@ int main()
     {
         createBinFile(iftxt, ofbin);
     }
-    */
+    
 
     ifstream ifbin("test100.bin", ios::binary);
-
     outputBinFile(ifbin);
+    ifbin.close();
 
-   /*Owner result;
+
+
+
+    ifstream ifbin1("test100.bin", ios::binary);
+
+    Owner result;
     int searchKey = 1000016541;
-    result = linearSearch(ifbin, searchKey);
+    
+    result = linearSearch(ifbin1, searchKey);
 
-    cout << result.key << result.address;*/
+    cout << result.key << result.address;
 
 
     /*for (int i = 100; i <= UP; i *= 10)

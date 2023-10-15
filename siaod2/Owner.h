@@ -8,7 +8,7 @@ using namespace std;
 struct Owner
 {
 	unsigned int key = 0;
-	string address = "lorem-ipsum-adress";
+	char address[20] = "lorem-ipsum-adress";
 };
 
 
