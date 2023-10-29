@@ -12,7 +12,7 @@ using std::chrono::milliseconds;
 int main()
 {
     setlocale(LC_ALL, "Russian");
-    Owner result;
+    Titem result;
     int searchKey = 1000016541;
 
     // 100

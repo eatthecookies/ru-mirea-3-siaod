@@ -14,7 +14,7 @@ int main()
 
     ifstream ifbin1("test100.bin", ios::binary);
 
-    Owner result;
+    Titem result;
     int searchKey = 1000016541;
     
     auto t1 = chrono::high_resolution_clock::now();

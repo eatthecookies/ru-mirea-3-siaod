@@ -5,7 +5,7 @@
 
 void createBinFile(ifstream& iftxt, ofstream& ofbin)
 {
-	Owner value;
+	Titem value;
 
 	while (!iftxt.eof())
 	{
@@ -24,7 +24,7 @@ void outputBinFile(ifstream& ifbin)
 		cout << "Не удалось открыть файл: " << endl;
 		return;
 	}
-	Owner value;
+	Titem value;
 
 	while (ifbin.read((char*)&value, sizeof(value)))
 	{
@@ -42,10 +42,10 @@ void outputBinFile(ifstream& ifbin)
 }
 
 
-Owner linearSearch(ifstream& ifbin, unsigned int key)
+Titem linearSearch(ifstream& ifbin, unsigned int key)
 {
 	int i = 0;
-	Owner value;
+	Titem value;
 
 	ifbin.read((char*)&value, sizeof(value));
 

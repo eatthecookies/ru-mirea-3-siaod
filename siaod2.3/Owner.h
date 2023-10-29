@@ -6,7 +6,7 @@ using namespace std;
 #include <fstream>
 #include <cmath>
 
-struct Owner
+struct Titem
 {
 	unsigned int key = 0;
 	char address[20] = "lorem-ipsum-adress";
@@ -22,6 +22,6 @@ void createTable(vector<TableItem>& table, ifstream&ifbin);
 void createBinFile(ifstream& iftxt, ofstream& ofbin);
 void outputBinFile(ifstream& ofbin);
 int binaryOptimizedSearch(vector<TableItem>& table, int key);
-Owner linearSearch(ifstream& ifbin, unsigned int key);
-Owner findByOffset(ifstream& ifbin, int offset);
+Titem linearSearch(ifstream& ifbin, unsigned int key);
+Titem findByOffset(ifstream& ifbin, int offset);
 

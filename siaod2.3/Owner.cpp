@@ -6,7 +6,7 @@
 
 void createBinFile(ifstream& iftxt, ofstream& ofbin)
 {
-	Owner owner;
+	Titem owner;
 
 	while (!iftxt.eof())
 	{
@@ -25,7 +25,7 @@ void outputBinFile(ifstream& ifbin)
 		cout << "Не удалось открыть файл: " << endl;
 		return;
 	}
-	Owner owner;
+	Titem owner;
 
 	while (ifbin.read((char*)&owner, sizeof(owner)))
 	{
@@ -43,10 +43,10 @@ void outputBinFile(ifstream& ifbin)
 }
 
 
-Owner linearSearch(ifstream& ifbin, unsigned int key)
+Titem linearSearch(ifstream& ifbin, unsigned int key)
 {
 	int i = 0;
-	Owner owner;
+	Titem owner;
 
 	ifbin.read((char*)&owner, sizeof(owner));
 
@@ -66,7 +66,7 @@ Owner linearSearch(ifstream& ifbin, unsigned int key)
 void createTable(vector<TableItem>& table, ifstream& ifbin)
 {
 	TableItem item;
-	Owner owner;
+	Titem owner;
 
 	int i = 0;
 
@@ -90,9 +90,9 @@ bool compareByKey(TableItem& a, TableItem& b)
 	return a.key < b.key;
 }
 
-Owner findByOffset(ifstream& ifbin, int offset)
+Titem findByOffset(ifstream& ifbin, int offset)
 {
-	Owner owner;
+	Titem owner;
 	ifbin.seekg(offset, ios::beg);
 	ifbin.read((char*)&owner, sizeof(owner));
 	return owner;
