@@ -127,7 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Owner.cpp" />
     <ClCompile Include="siaod3.3.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Owner.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
