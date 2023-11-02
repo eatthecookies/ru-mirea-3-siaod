@@ -50,17 +50,20 @@ int hashFunction(long long key, int length)
 	return key % length;
 }
 
-int hashFunction2(long long key, int length)
+int secondHashFunction(long long key, int length)
 {
-	return key / length;
+	return 1 + (key % (length - 1));
 }
 
 void insertItem(Titem item, HashTable& table)
 {
 	int index = hashFunction(item.key, table.length);
-
-	while (table.values[index].isOpen == false) 
-		index = hashFunction2(index, table.length);
+	
+	int i = 1;
+	while (table.values[index].isOpen == false){
+		index = (hashFunction(item.key, table.length) + i * secondHashFunction(item.key, table.length)) % table.length ;
+		i++;
+	}
 	
 	if (index < table.length)
 	{
@@ -73,8 +76,13 @@ int findValue(HashTable& table, int key)
 {
 	int index = hashFunction(key, table.length);
 
+
+	int i = 1;
 	while (!table.values[index].isDeleted && !table.values[index].isOpen && (table.values[index].key != key))
-		index = hashFunction2(index, table.length);
+	{
+		index = (hashFunction(key, table.length) + i * secondHashFunction(key, table.length)) % table.length;
+		i++;
+	}
 
 	if (table.values[index].isDeleted && table.values[index].isOpen)
 		return -1;
@@ -92,11 +100,17 @@ int deleteValue(HashTable& table, int key)
 	return 0;
 }
 
+void rehashTable(HashTable& table, int key)
+{
+
+
+}
+
 void outputTable(HashTable& table)
 {
 	for (int i = 0; i < table.length; i++)
 	{
-		cout << left<< setw(4)  << i << " " << table.values[i].key << " " << table.values[i].FIO << " " << table.values[i].address << endl;
+		cout << left<< setw(4)  << i << " " << table.values[i].key << "  " << table.values[i].FIO << "  " << table.values[i].address << endl;
 	}
 
 }
@@ -112,11 +126,14 @@ void fillTable(HashTable& table, ifstream& ifbin)
 
 	for (int i = 0; i < table.length; i++)
 	{
-		ifbin.read((char*)&value, sizeof(Owner));
-		item.key = value.key;
-		strcpy(item.FIO, value.FIO);
-		strcpy(item.address, value.address);
-		insertItem(item, table);
+		if (ifbin.read((char*)&value, sizeof(Owner))) {
+			item.key = value.key;
+			item.isOpen = false;
+			strcpy(item.FIO, value.FIO);
+			strcpy(item.address, value.address);
+			insertItem(item, table);
+		}
+		
 	}
 
 

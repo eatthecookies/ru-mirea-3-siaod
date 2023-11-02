@@ -19,7 +19,7 @@ struct Titem
 	char FIO[11];
 	char address[20];
 
-	bool isOpen = false; // признак открытой дл€ вставки €чейки
+	bool isOpen = true; // признак открытой дл€ вставки €чейки
 	bool isDeleted = false;
 };
 
@@ -40,8 +40,14 @@ void outputTable(HashTable& table);
 void fillTable(HashTable& table, ifstream& ofbin);
 
 int hashFunction(long long,int);
-int hashFunction2(long long, int);
+int secondHashFunction(long long, int);
+
+// [+] вставить ключ в таблицу, 
+// [+] удалить ключ иp таблицы, 
+// [+] найти ключ в таблице, 
+// [ ] рехешировать таблицу
 
 void insertItem(Titem item, HashTable& Table);
 int findValue(HashTable& table, int key);
 int deleteValue(HashTable& table, int key);
+void rehashTable(HashTable& table, int key);

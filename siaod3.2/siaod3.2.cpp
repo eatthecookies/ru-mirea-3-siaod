@@ -36,25 +36,23 @@ int main()
 
     //oftxt1.close();
 
-    ofstream ofbin1("data100.bin", ios::binary);
-    ifstream iftxt1("data100.txt");
+    //ofstream ofbin1("data100.bin", ios::binary);
+    //ifstream iftxt1("data100.txt");
 
-    if (ofbin1.is_open() && iftxt1.is_open())
-    {
-        createBinFile(iftxt1, ofbin1);
-    }
+    //if (ofbin1.is_open() && iftxt1.is_open())
+    //{
+    //    createBinFile(iftxt1, ofbin1);
+    //}
 
     //ifstream ifbin1("data100.bin", ios::binary);
     //outputBinFile(ifbin1);
 
 
     // создание таблицы
- 
-    cout << 72703184785 % 100;
 
 
     HashTable table(100);
-    outputTable(table);
+    //outputTable(table);
     
     ifstream ifbin1("data100.bin", ios::binary);
     fillTable(table, ifbin1);
