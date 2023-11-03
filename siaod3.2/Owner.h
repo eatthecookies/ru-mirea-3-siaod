@@ -8,16 +8,16 @@ using namespace std;
 struct Owner
 {
 	long long key = 0;
-	char FIO[11] = "I.A.Ivanov";
-	char address[20] = "lorem-ipsum-adress";
+	char FIO[30];
+	char address[100];
 };
 
 
 struct Titem
 {
 	long long key = 0;
-	char FIO[11];
-	char address[20];
+	char FIO[30];
+	char address[100];
 
 	bool isOpen = true; // признак открытой дл€ вставки €чейки
 	bool isDeleted = false;

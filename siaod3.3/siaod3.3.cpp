@@ -2,6 +2,7 @@
 #include "Owner.h"
 #include <chrono>
 #include <fstream>
+using namespace std;
 using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
@@ -11,16 +12,10 @@ using std::chrono::milliseconds;
 int main()
 {
     setlocale(LC_ALL, "Russian");
-    ofstream ofbin1("data10.bin", ios::binary);
-    ifstream iftxt1("data10.txt");
-
-    if (ofbin1.is_open() && iftxt1.is_open())
-    {
-        createBinFile(iftxt1, ofbin1);
-    }
 
     HashTable table(100);
     long long key;
+    cout << " ";
 
     while (true) {
         cout << "\nМеню" << endl;
@@ -29,6 +24,7 @@ int main()
         cout << "3. Вывод содержимого таблицы" << endl;
         cout << "4. Удаление элемента из таблицы по ключу" << endl;
         cout << "5. Поиск ключа в таблице с прямым доступом из файла" << endl;
+        cout << "6. Выполнение задания" << endl;
         cout << "0. Завершение работы" << endl;
         cout << ">> ";
         int inp;
@@ -83,9 +79,67 @@ int main()
             else {
                 cout << "Элемент по данному ключу отсутствует." <<endl;
             }
-            
 
+            break;
+        }
+        case 6:
+        {
+            ifstream ifbin("table.bin", ios::binary);
+
+            long long firstKey, middleKey, lastKey;
+
+            firstKey = table.values[0].key;
+            middleKey = table.values[table.length / 2].key;
+            lastKey = table.values[table.length - 1].key;
             
+            
+            Titem item;
+
+            auto t1 = chrono::high_resolution_clock::now();
+               
+            ifbin.seekg(findValueOffset(table, firstKey));
+            ifbin.read((char*)&item, sizeof(Titem));
+                
+            auto t2 = chrono::high_resolution_clock::now();
+
+            duration<double, std::milli> ms_double = t2 - t1;
+
+            cout << "Elapsed time on firstKey is " << ms_double.count() << "ms\n";
+
+
+            t1 = chrono::high_resolution_clock::now();
+
+            ifbin.seekg(findValueOffset(table, middleKey));
+            ifbin.read((char*)&item, sizeof(Titem));
+
+            t2 = chrono::high_resolution_clock::now();
+
+            ms_double = t2 - t1;
+
+            cout << "Elapsed time on middleKey is " << ms_double.count() << "ms\n";
+
+            t1 = chrono::high_resolution_clock::now();
+
+            ifbin.seekg(findValueOffset(table, lastKey));
+            ifbin.read((char*)&item, sizeof(Titem));
+
+            t2 = chrono::high_resolution_clock::now();
+
+            ms_double = t2 - t1;
+
+            cout << "Elapsed time on lastKey is " << ms_double.count() << "ms\n";
+
+            break;
+        }
+        case 80:
+        {
+            ofstream ofbin1("data500000.bin", ios::binary);
+            ifstream iftxt1("output.txt");
+
+            if (ofbin1.is_open() && iftxt1.is_open())
+            {
+                createBinFile(iftxt1, ofbin1);
+            }
             break;
         }
         case 0:

@@ -33,7 +33,7 @@ void outputBinFile(ifstream& ifbin)
 		string s = value.address;
 
 		if (s != "")
-			cout << value.key << " " << value.FIO << " " << value.address << endl;
+			cout << value.key << " " << left << setw(20) << value.FIO << " " << value.address << endl;
 	}
 
 	if (!ifbin.eof() && ifbin.fail()) {
@@ -63,6 +63,7 @@ void insertItem(Titem item, HashTable& table)
 
 	while (table.values[index].isOpen == false){
 		index = (hashFunction(item.key, table.length) + i * secondHashFunction(item.key, table.length)) % table.length ;
+		if (i > 10) index++;
 		i++;
 	}
 	
@@ -93,6 +94,7 @@ int findValue(HashTable& table, long long key)
 		else if (table.values[index].isOpen) {
 			if (table.values[index].isDeleted) {
 				index = (hashFunction(key, table.length) + i * secondHashFunction(key, table.length)) % table.length;
+				if (i > 10) index++;
 				i++;
 			}
 			else
@@ -100,6 +102,7 @@ int findValue(HashTable& table, long long key)
 		}
 		else {
 			index = (hashFunction(key, table.length) + i * secondHashFunction(key, table.length)) % table.length;
+			if (i > 10) index++;
 			i++;
 		}
 		
@@ -136,6 +139,7 @@ void rehashTable(HashTable& table)
 			int i = 1;
 			while (newValues[index].isOpen == false) {
 				index = (hashFunction(item.key, table.length) + i * secondHashFunction(item.key, table.length)) % table.length;
+				if (i > 10) index++;
 				i++;
 			}
 
@@ -152,7 +156,7 @@ void outputTable(HashTable& table)
 	{
 		if (table.values[i].key!= 0 and !table.values[i].isDeleted)
 		{
-			cout << left << setw(4) << i << " " << table.values[i].key << "  " << table.values[i].FIO << "  " << table.values[i].address << endl;
+			cout << left << setw(4) << i << " " << table.values[i].key << "  " << left << setw(20) << table.values[i].FIO << "  " << table.values[i].address << endl;
 		}
 	}
 
