@@ -21,7 +21,6 @@ void createBinFile(ifstream& iftxt, ofstream& ofbin)
 }
 
 
-
 void outputBinFile(ifstream& ifbin)
 {
 	if (!ifbin.is_open()) {
@@ -35,7 +34,9 @@ void outputBinFile(ifstream& ifbin)
 		string s = item.address;
 
 		if (s != "")
-			cout << item.key << " " << item.FIO << " " << item.address << endl;
+			cout << left << setw(4) << " " << item.key
+			<< "  " << left << setw(20) << item.FIO << "  " <<
+			left << setw(30) << item.address << endl;
 	}
 
 	if (!ifbin.eof() && ifbin.fail()) {
@@ -82,6 +83,16 @@ void insertItem(Titem item, HashTable& table, ofstream& ofbin)
 	}
 }
 
+int findValueOffset(HashTable& table, long long key)
+{
+	int index = findValue(table, key);
+
+	if (index != -1)
+		return table.values[index].position;
+	
+	return -1;
+}
+
 int findValue(HashTable& table, long long key)
 {
 	int index = hashFunction(key, table.length);
@@ -91,7 +102,7 @@ int findValue(HashTable& table, long long key)
 	while (true) {
 		if ((table.values[index].key == key)) {
 			break;
-		}  
+		}
 		else if (table.values[index].isOpen) {
 			if (table.values[index].isDeleted) {
 				index = (hashFunction(key, table.length) + i * secondHashFunction(key, table.length)) % table.length;
@@ -109,27 +120,25 @@ int findValue(HashTable& table, long long key)
 	if (table.values[index].isDeleted || table.values[index].isOpen)
 		return -1;
 	else
-		return table.values[index].position;
+		return index;
 }
 
-int deleteValue(HashTable& table, long long key, ifstream& ifbin)
+int deleteValue(HashTable& table, long long key, ofstream& ofbin)
 {
 	int index = findValue(table, key);
-	ofstream ofbin("temp.bin", ios::binary);
-	for (int i = 0; i < table.length; i++) {
-		if (table.values[i].key != key) {
-			ofbin.write((char*)(&table.values[i]), sizeof(Titem));
-		}
-	}
-	ofbin.close();
-	ifbin.close();
-
-	//remove("table.bin");
-	//if (rename("temp.bin", "table.bin") != 0) cout << "Ошибка при переименовании файла.";
 	
 	table.values[index].isDeleted = true;
 	table.values[index].isOpen = true;
 	table.numClosed--;
+
+	for (int i = 0; i < table.length; i++) {
+		if (!table.values[i].isDeleted && !table.values[i].isOpen)
+			ofbin.write((char*)(&table.values[i]), sizeof(Titem));
+	}
+
+	ofbin.close();
+	
+	
 	return 0;
 }
 
@@ -163,7 +172,9 @@ void outputTable(HashTable& table)
 	{
 		if (table.values[i].key != 0 and !table.values[i].isDeleted)
 		{
-			cout << left << setw(4) << i << " " << table.values[i].key << "  " << table.values[i].FIO << "  " << table.values[i].address << endl;
+			cout << left << setw(4) << i << " " << table.values[i].key 
+				<< "  " << left << setw(20) << table.values[i].FIO << "  "  <<
+				left << setw(18) << table.values[i].address << endl;
 		}
 	}
 
@@ -205,11 +216,12 @@ void fillTable(HashTable& table, ifstream& ifbin, ofstream& ofbin)
 	if (!ifbin.eof() && ifbin.fail()) {
 		cout << "Ошибка чтения из файла." << endl;
 	}
+
 	ofbin.close();
 	ifbin.close();
 }
 
-HashTable::HashTable(int length, ofstream& ofbin) {
+HashTable::HashTable(int length) {
 	this->length = length;
 	values.resize(length);
 }
