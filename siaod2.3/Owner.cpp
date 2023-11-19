@@ -94,7 +94,7 @@ Titem findByOffset(ifstream& ifbin, int offset)
 {
 	Titem owner;
 	ifbin.seekg(offset, ios::beg);
-	ifbin.read((char*)&owner, sizeof(owner));
+	ifbin.read((char*)&owner, sizeof(owner)); 
 	return owner;
 }
 
