@@ -51,6 +51,7 @@ void createTreeFromFile(SplayTree& tree, ifstream& ifbin)
 	}
 	Owner item;
 	int i = 0;
+	int rotations = 0;
 	while (ifbin.read((char*)&item, sizeof(Owner)))
 	{
 		string s = item.address;
@@ -61,7 +62,8 @@ void createTreeFromFile(SplayTree& tree, ifstream& ifbin)
 			newNode->key = item.key;
 			newNode->position = i * sizeof(Owner);
 
-			addNode(newNode, tree);
+			//addNode(newNode, tree);
+			insertRotations(tree, newNode, rotations);
 		}
 		i++;
 	}
@@ -71,122 +73,249 @@ void createTreeFromFile(SplayTree& tree, ifstream& ifbin)
 	}
 
 	ifbin.close();
-
+	cout << rotations;
 }
 
- 
+Node* rightRotate(Node* P) {
+	Node* X = P->left;
+	P->left = X->right;
+	X->right = P;
+	return X;
+}
 
-Node* splay(Node* root, int key) {
-	// zig -> родитель x - корень -> просто разворот (левый или правый)
-	// zig-zag -> родитель x - правое поддерево ->
-	// zig-zig -> родитель x - левое поддерево
+Node* leftRotate(Node* P) {
+	Node* X = P->right;
+	P->right = X->left;
+	X->left = P;
+	return X;
+}
 
-
-	if (root == nullptr || root->key == key) {
+Node* splay(Node* root, long long key)
+{
+	// Базовые случаи: root равен NULL или
+	// ключ находится в корне
+	if (root == NULL || root->key == key)
 		return root;
-	}
-
-	//  левое поддерево
-	if (root->key > key) {
-		if (root->left == nullptr) {
-			return root;
-		}
-
-		if (root->left->key > key) {
+	// Ключ может находиться в левом поддереве
+	if (root->key > key)
+	{
+		// Ключа нет в дереве, завершение
+		if (root->left == NULL) return root;
+		// Zig-Zig (Левый-левый)
+		if (root->left->key > key)
+		{
+			// Сначала рекурсивно поднимем ключ в качестве корня left-left
 			root->left->left = splay(root->left->left, key);
-			root = rotateRight(root);
+			// Первый поворот для root, второй поворот выполняется после else (типа дедушка)
+			root = rightRotate(root);
 		}
-		else if (root->left->key < key) {
-			root
+		else if (root->left->key < key) // Zig-Zag (LeftRight)
+		{
+			// Сначала рекурсивно поднимаем ключ в качестве корня left-right 
+			root->left->right = splay(root->left->right, key);
+			// Выполняем первый поворот для root->left (типа дедушка)
+			if (root->left->right != NULL)
+				root->left = leftRotate(root->left);
 		}
+		// Выполняем второй поворот для корня (типа папа)
+		return (root->left == NULL) ? root : rightRotate(root);
 	}
-
-
-
-	return nullptr;
+	else // Ключ может находиться в правом поддереве
+	{
+		// Ключа нет в дереве, завершение
+		if (root->right == NULL) return root;
+		if (root->right->key > key) // Zag-Zig (LeftRight)
+		{
+			// Поднять ключ в качестве корня right-left
+			root->right->left = splay(root->right->left, key);
+			// Выполняем первый поворот для root->right
+			if (root->right->left != NULL)
+				root->right = rightRotate(root->right);
+		}
+		else if (root->right->key < key) // Zag-Zag (Правый правый)
+		{
+			// Поднимаем ключ в качестве корня right-right
+			root->right->right = splay(root->right->right, key);
+			//Выполняем первый поворот
+			root = leftRotate(root);
+		}
+		// Выполняем второй поворот для root
+		return (root->right == NULL) ? root : leftRotate(root);
+	}
 }
 
 
-void removeNode(SplayTree& tree, long long searchKey) {
-	Node* root = tree.root;
-	Node* parent = nullptr;
-	Node* currentNode = root;
 
-	// Поиск удаляемого узла
-	while (currentNode != nullptr && currentNode->key != searchKey) {
-		parent = currentNode;
-		if (searchKey < currentNode->key)
-			currentNode = currentNode->left;
-		else
-			currentNode = currentNode->right;
-	}
 
-	if (currentNode == nullptr) {
-		// Узел не найден
-		return;
-	}
+void removeNode(SplayTree & tree, long long key) {
+	if (tree.root == NULL) return; // дерево пусто
+	tree.root = splay(tree.root, key);
 
-	// У узла нет детей или только один ребенок
-	if (currentNode->left == nullptr) {
-		if (parent == nullptr)
-			tree.root = currentNode->right;
-		else if (currentNode == parent->left)
-			parent->left = currentNode->right;
-		else
-			parent->right = currentNode->right;
-		delete currentNode;
-	}
-	else if (currentNode->right == nullptr) {
-		if (parent == nullptr)
-			tree.root = currentNode->left;
-		else if (currentNode == parent->left)
-			parent->left = currentNode->left;
-		else
-			parent->right = currentNode->left;
-		delete currentNode;
+	
+	if (tree.root->left == NULL) {
+		tree.root = tree.root->right;
 	}
 	else {
-		// У узла два ребенка
-		Node* successor = currentNode->right;
-		Node* successorParent = nullptr;
-
-		// ищем наименьший узел
-		while (successor->left != nullptr) {
-			successorParent = successor;
-			successor = successor->left;
-		}
-
-		// мы не заходили в предыдущий цикл -> значит, succesorParent = currentNode
-		if (successorParent != nullptr)
-			successorParent->left = successor->right;
-		else
-			currentNode->right = successor->right;
-
-
-		currentNode->key = successor->key;
-		currentNode->position = successor->position;
-		delete successor;
+		Node* x = tree.root->right;
+		tree.root = tree.root->left;
+		tree.root = splay(tree.root, key);
+		tree.root->right = x;
 	}
+	
 }
 
+Node* splayRotations(Node* root, long long key, int& rotations)
+{
+	// Базовые случаи: root равен NULL или
+	// ключ находится в корне
+	if (root == NULL || root->key == key)
+		return root;
+	// Ключ может находиться в левом поддереве
+	if (root->key > key)
+	{
+		// Ключа нет в дереве, завершение
+		if (root->left == NULL) return root;
+		// Zig-Zig (Левый-левый)
+		if (root->left->key > key)
+		{
+			// Сначала рекурсивно поднимем ключ в качестве корня left-left
+			root->left->left = splayRotations(root->left->left, key, rotations);
+			// Первый поворот для root, второй поворот выполняется после else (типа дедушка)
+			root = rightRotate(root);
+			rotations++;
+		}
+		else if (root->left->key < key) // Zig-Zag (LeftRight)
+		{
+			// Сначала рекурсивно поднимаем ключ в качестве корня left-right 
+			root->left->right = splayRotations(root->left->right, key, rotations);
+			// Выполняем первый поворот для root->left (типа дедушка)
+			if (root->left->right != NULL) {
+				root->left = leftRotate(root->left);
+				rotations++;
+			}
+		}
+		// Выполняем второй поворот для корня (типа папа)
+		if (root->left == NULL) 
+			return root; 
+		else{
+			rotations++;
+			return	rightRotate(root);
+		}
+	}
+	else // Ключ может находиться в правом поддереве
+	{
+		// Ключа нет в дереве, завершение
+		if (root->right == NULL) return root;
+		if (root->right->key > key) // Zag-Zig (LeftRight)
+		{
+			// Поднять ключ в качестве корня right-left
+			root->right->left = splayRotations(root->right->left, key, rotations);
+			// Выполняем первый поворот для root->right
+			if (root->right->left != NULL)
+				root->right = rightRotate(root->right);
+		}
+		else if (root->right->key < key) // Zag-Zag (Правый правый)
+		{
+			// Поднимаем ключ в качестве корня right-right
+			root->right->right = splayRotations(root->right->right, key, rotations);
+			//Выполняем первый поворот
+			root = leftRotate(root);
+		}
+		// Выполняем второй поворот для root
+		if (root->right == NULL)
+			return root;
+		else {
+			rotations++;
+			return leftRotate(root);
+		}
+	}
+}
 
 Node* findNode(SplayTree& tree, long long searchKey)
 {
-	Node* root = tree.root;
-	Node* currentNode = root;
+	tree.root = splay(tree.root, searchKey);
 
-	while (currentNode != nullptr)
+	if (tree.root->key == searchKey)
+		return tree.root;
+	
+	return nullptr;
+}
+
+Owner getOwnerFromFile(int offset, ifstream&ifbin) {
+	Owner owner;
+	ifbin.read((char*)&owner, sizeof(owner));
+	ifbin.seekg(offset, ios::beg);
+	ifbin.close();
+	return owner;
+}
+
+void insert(SplayTree& tree, Node* newNode) {
+	if (tree.root == nullptr)
 	{
-		if (currentNode->key == searchKey)
-			return currentNode;
+		tree.root = newNode;
+		return;
+	}
+	
+	long long key = newNode->key;
+	tree.root = splay(tree.root, key);
 
-		if (searchKey > currentNode->key)
-			currentNode = currentNode->right;
-		else
-			currentNode = currentNode->left;
+	if (tree.root->key == key) {
+		return;
+	}
+	if (key < tree.root->key) {
+		newNode->right = tree.root;
+		newNode->left = tree.root->left;
+		tree.root->left = nullptr;
+	}
+	else {
+		newNode->left = tree.root;
+		newNode->right = tree.root->right;
+		tree.root->right = nullptr;
+	}
+	tree.root = newNode;
+	return;
+}
+
+void insertRotations(SplayTree& tree, Node* newNode, int& rotations) {
+	if (tree.root == nullptr)
+	{
+		tree.root = newNode;
+		return;
 	}
 
-	return nullptr;
+	long long key = newNode->key;
+	tree.root = splayRotations(tree.root, key, rotations);
+
+	if (tree.root->key == key) {
+		return;
+	}
+	if (key < tree.root->key) {
+		newNode->right = tree.root;
+		newNode->left = tree.root->left;
+		tree.root->left = nullptr;
+	}
+	else {
+		newNode->left = tree.root;
+		newNode->right = tree.root->right;
+		tree.root->right = nullptr;
+	}
+	tree.root = newNode;
+	return;
+}
+void printTree1(Node* node, int level) {
+	if (node == nullptr) {
+		return;
+	}
+
+	printTree1(node->right, level + 1);
+
+	for (int i = 0; i < level; i++) {
+		cout << "    ";
+	}
+
+	cout << node->key << std::endl;
+
+	printTree1(node->left, level + 1);
 }
 
 void addNode(Node* newNode, SplayTree& tree)
@@ -206,7 +335,7 @@ void addNode(Node* newNode, SplayTree& tree)
 	while (currentNode != nullptr) {
 		parent = currentNode;
 
-		if (newNode->key < currentNode->key)
+		if (newNode->key < currentNode->key) 
 			currentNode = currentNode->left;
 		else if (newNode->key > currentNode->key)
 			currentNode = currentNode->right;
@@ -220,6 +349,8 @@ void addNode(Node* newNode, SplayTree& tree)
 
 	tree.n++;
 }
+
+
 
 
 void showTrunks(Trunk* p)

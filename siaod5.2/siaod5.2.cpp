@@ -8,33 +8,37 @@ int main()
 {
     SplayTree tree;
     // Создание дерева и бинарного файла
-    ifstream ifbin("data100.bin", ios::binary);
+    ifstream ifbin("testdata.bin", ios::binary);
     createTreeFromFile(tree, ifbin);
     printTree(tree.root, nullptr, false);
-
-    // включение элемента в дерево;
-    Node* newNode = new Node;
+    cout << findNode(tree, 18)->position;
+    //tree.root = splay(tree.root, 18);
+    //printTree(tree.root, nullptr, false);
+    //// включение элемента в дерево;
+    /*Node* newNode = new Node;
     newNode->key = 0;
-    newNode->position = 0;
+    newNode->position = 0;*/
 
-    addNode(newNode, tree);
+    //insert(tree, newNode);
+    //removeNode(tree, 68);
+    //printTree(tree.root, nullptr, false);
+    //printTree1(tree.root, 0);
+    //// поиск ключа в дереве;
+    //cout << endl << findNode(tree, 7886895032)->position << " ";
 
-    // поиск ключа в дереве;
-    cout << endl << findNode(tree, 7886895032)->position << " ";
+    //// поиск записи в файле с использованием БДП;
+    ifstream ifbin2("testdata.bin", ios::binary);
+    cout << getOwnerFromFile(findNode(tree, 18)->position, ifbin2).address;
+    //Owner owner;
+    //ifbin2.read((char*)&owner, sizeof(owner));
+    //Node* q = findNode(tree, 7886895032);
+    //ifbin2.seekg(q->position, ios::beg);
+    //cout << owner.address << endl << endl;
 
-    // поиск записи в файле с использованием БДП;
-    ifstream ifbin2("data100.bin", ios::binary);
+    // //удаление ключа из дерева;
+    //removeNode(tree, 7150003532);
 
-    Owner owner;
-    ifbin2.read((char*)&owner, sizeof(owner));
-    Node* q = findNode(tree, 7886895032);
-    ifbin2.seekg(q->position, ios::beg);
-    cout << owner.address << endl << endl;
-
-     //удаление ключа из дерева;
-    removeNode(tree, 7150003532);
-
-     //отображение дерева
-    printTree(tree.root, nullptr, false);
+    // //отображение дерева
+    //printTree(tree.root, nullptr, false);
 
 }

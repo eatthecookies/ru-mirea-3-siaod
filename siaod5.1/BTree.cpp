@@ -203,6 +203,9 @@ void showTrunks(Trunk* p)
 	cout << p->str;
 }
 
+
+
+
 void printTree(Node* root, Trunk* prev, bool isLeft)
 {
 	if (root == nullptr) {

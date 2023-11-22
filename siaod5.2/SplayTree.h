@@ -24,16 +24,18 @@ struct SplayTree
 	int n;							// количество узлов дерева
 };
 
-
+Node* splay(Node* root, int key);
 void createBinFile(ifstream& iftxt, ofstream& ofbin);
 void outputBinFile(ifstream& ifbin);
-
+void printTree1(Node* node, int level);
 void createTreeFromFile(SplayTree& tree, ifstream& ifbin);
-
+Node* splayRotations(Node* root, long long key, int& rotations);
 void addNode(Node* newNode, SplayTree& tree);
 void removeNode(SplayTree& tree, long long searchKey);
 Node* findNode(SplayTree& tree, long long searchKey);
-
+void insert(SplayTree& tree, Node* newNode);
+Owner getOwnerFromFile(int offset, ifstream& ifbin);
+void insertRotations(SplayTree& tree, Node* newNode, int& rotations);
 
 struct Trunk
 {
