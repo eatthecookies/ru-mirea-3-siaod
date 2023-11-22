@@ -128,6 +128,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="siaod5.2.cpp" />
+    <ClCompile Include="SplayTree.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SplayTree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

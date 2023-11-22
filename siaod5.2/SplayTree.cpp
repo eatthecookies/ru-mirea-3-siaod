@@ -1,7 +1,7 @@
-ï»¿#include "BTree.h"
+#include "SplayTree.h"
 #include <fstream>
 #include <iomanip>
-
+using namespace std;
 
 void createBinFile(ifstream& iftxt, ofstream& ofbin)
 {
@@ -21,7 +21,7 @@ void createBinFile(ifstream& iftxt, ofstream& ofbin)
 void outputBinFile(ifstream& ifbin)
 {
 	if (!ifbin.is_open()) {
-		cout << "ÐÐµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ Ñ„Ð°Ð¹Ð»" << endl;
+		std::cout << "Íå óäàëîñü îòêðûòü ôàéë" << endl;
 		return;
 	}
 	Owner item;
@@ -31,22 +31,22 @@ void outputBinFile(ifstream& ifbin)
 		string s = item.address;
 
 		if (s != "")
-			cout << left << setw(4) << " " << item.key
+			std::cout << left << setw(4) << " " << item.key
 			<< "  " << left << setw(20) << left << setw(30) << item.address << endl;
 	}
 
 	if (!ifbin.eof() && ifbin.fail()) {
-		cout << "ÐžÑˆÐ¸Ð±ÐºÐ° Ñ‡Ñ‚ÐµÐ½Ð¸Ñ Ð¸Ð· Ñ„Ð°Ð¹Ð»Ð°." << endl;
+		std::cout << "Îøèáêà ÷òåíèÿ èç ôàéëà." << endl;
 	}
 
 	ifbin.close();
 }
 
 
-void createTreeFromFile(ifstream& ifbin, BTree &tree)
+void createTreeFromFile(SplayTree& tree, ifstream& ifbin)
 {
 	if (!ifbin.is_open()) {
-		cout << "ÐÐµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ Ñ„Ð°Ð¹Ð»" << endl;
+		cout << "Íå óäàëîñü îòêðûòü ôàéë" << endl;
 		return;
 	}
 	Owner item;
@@ -59,7 +59,7 @@ void createTreeFromFile(ifstream& ifbin, BTree &tree)
 		{
 			Node* newNode = new Node();
 			newNode->key = item.key;
-			newNode->position = i*sizeof(Owner);
+			newNode->position = i * sizeof(Owner);
 
 			addNode(newNode, tree);
 		}
@@ -67,19 +67,52 @@ void createTreeFromFile(ifstream& ifbin, BTree &tree)
 	}
 
 	if (!ifbin.eof() && ifbin.fail()) {
-		cout << "ÐžÑˆÐ¸Ð±ÐºÐ° Ñ‡Ñ‚ÐµÐ½Ð¸Ñ Ð¸Ð· Ñ„Ð°Ð¹Ð»Ð°." << endl;
+		cout << "Îøèáêà ÷òåíèÿ èç ôàéëà." << endl;
 	}
 
 	ifbin.close();
 
 }
 
-void removeNode(BTree& tree, long long searchKey) {
+ 
+
+Node* splay(Node* root, int key) {
+	// zig -> ðîäèòåëü x - êîðåíü -> ïðîñòî ðàçâîðîò (ëåâûé èëè ïðàâûé)
+	// zig-zag -> ðîäèòåëü x - ïðàâîå ïîääåðåâî ->
+	// zig-zig -> ðîäèòåëü x - ëåâîå ïîääåðåâî
+
+
+	if (root == nullptr || root->key == key) {
+		return root;
+	}
+
+	//  ëåâîå ïîääåðåâî
+	if (root->key > key) {
+		if (root->left == nullptr) {
+			return root;
+		}
+
+		if (root->left->key > key) {
+			root->left->left = splay(root->left->left, key);
+			root = rotateRight(root);
+		}
+		else if (root->left->key < key) {
+			root
+		}
+	}
+
+
+
+	return nullptr;
+}
+
+
+void removeNode(SplayTree& tree, long long searchKey) {
 	Node* root = tree.root;
 	Node* parent = nullptr;
 	Node* currentNode = root;
 
-	// ÐŸÐ¾Ð¸ÑÐº ÑƒÐ´Ð°Ð»ÑÐµÐ¼Ð¾Ð³Ð¾ ÑƒÐ·Ð»Ð°
+	// Ïîèñê óäàëÿåìîãî óçëà
 	while (currentNode != nullptr && currentNode->key != searchKey) {
 		parent = currentNode;
 		if (searchKey < currentNode->key)
@@ -89,11 +122,11 @@ void removeNode(BTree& tree, long long searchKey) {
 	}
 
 	if (currentNode == nullptr) {
-		// Ð£Ð·ÐµÐ» Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½
+		// Óçåë íå íàéäåí
 		return;
 	}
 
-	// Ð£ ÑƒÐ·Ð»Ð° Ð½ÐµÑ‚ Ð´ÐµÑ‚ÐµÐ¹ Ð¸Ð»Ð¸ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¾Ð´Ð¸Ð½ Ñ€ÐµÐ±ÐµÐ½Ð¾Ðº
+	// Ó óçëà íåò äåòåé èëè òîëüêî îäèí ðåáåíîê
 	if (currentNode->left == nullptr) {
 		if (parent == nullptr)
 			tree.root = currentNode->right;
@@ -113,22 +146,22 @@ void removeNode(BTree& tree, long long searchKey) {
 		delete currentNode;
 	}
 	else {
-		// Ð£ ÑƒÐ·Ð»Ð° Ð´Ð²Ð° Ñ€ÐµÐ±ÐµÐ½ÐºÐ°
+		// Ó óçëà äâà ðåáåíêà
 		Node* successor = currentNode->right;
 		Node* successorParent = nullptr;
-		
-		// Ð¸Ñ‰ÐµÐ¼ Ð½Ð°Ð¸Ð¼ÐµÐ½ÑŒÑˆÐ¸Ð¹ ÑƒÐ·ÐµÐ»
+
+		// èùåì íàèìåíüøèé óçåë
 		while (successor->left != nullptr) {
 			successorParent = successor;
 			successor = successor->left;
 		}
 
-		// Ð¼Ñ‹ Ð½Ðµ Ð·Ð°Ñ…Ð¾Ð´Ð¸Ð»Ð¸ Ð² Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰Ð¸Ð¹ Ñ†Ð¸ÐºÐ» -> Ð·Ð½Ð°Ñ‡Ð¸Ñ‚, succesorParent = currentNode
+		// ìû íå çàõîäèëè â ïðåäûäóùèé öèêë -> çíà÷èò, succesorParent = currentNode
 		if (successorParent != nullptr)
 			successorParent->left = successor->right;
 		else
 			currentNode->right = successor->right;
-		
+
 
 		currentNode->key = successor->key;
 		currentNode->position = successor->position;
@@ -137,17 +170,13 @@ void removeNode(BTree& tree, long long searchKey) {
 }
 
 
-Node* findNode(BTree& tree, long long searchKey)
+Node* findNode(SplayTree& tree, long long searchKey)
 {
 	Node* root = tree.root;
-	
 	Node* currentNode = root;
-	Node* parent;
 
 	while (currentNode != nullptr)
-		//parent = currentNode;
 	{
-
 		if (currentNode->key == searchKey)
 			return currentNode;
 
@@ -155,12 +184,12 @@ Node* findNode(BTree& tree, long long searchKey)
 			currentNode = currentNode->right;
 		else
 			currentNode = currentNode->left;
-	} 
-	
+	}
+
 	return nullptr;
 }
 
-void addNode(Node* newNode, BTree& tree)
+void addNode(Node* newNode, SplayTree& tree)
 {
 	Node* root = tree.root;
 	newNode->left = newNode->right = nullptr;
@@ -182,7 +211,7 @@ void addNode(Node* newNode, BTree& tree)
 		else if (newNode->key > currentNode->key)
 			currentNode = currentNode->right;
 	}
-	
+
 
 	if (newNode->key < parent->key)
 		parent->left = newNode;

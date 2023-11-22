@@ -1,0 +1,10 @@
+8 Izhevsk-Stepnaya-street-3
+4 Ekaterinburg-Lesnaya-street-48
+2 Krasnodar-Solnechnaya-street-14
+18 Izhevsk-Vostochnaya-street-5
+24 Novosibirsk-Krasnaya-street-48
+5 Perm-Krasnaya-street-37
+6 Izhevsk-Gornaya-street-47
+77 Novosibirsk-Kommunisticheskaya-street-17
+68 Nizhnij-Gogolya-street-21
+1 Ekaterinburg-Majskaya-street-15

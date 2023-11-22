@@ -8,7 +8,7 @@ int main()
 {
     BTree tree;
 
-    // Создание дерева и бинарного файла
+    // Создание дерева из бинарного файла
     ifstream ifbin("data100.bin", ios::binary);
     createTreeFromFile(ifbin, tree);
     printTree(tree.root, nullptr, false);
