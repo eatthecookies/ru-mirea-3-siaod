@@ -32,8 +32,9 @@ void outputBinFile(ifstream& ifbin);
 void createTreeFromFile(ifstream& ifbin, BTree& tree);
 void removeNode(BTree& tree, long long searchKey);
 Node* findNode(BTree& tree, long long searchKey);
+Owner getOwnerFromFile(int offset, ifstream& ifbin);
 
-
+void printTree1(Node* node, int level);
 struct Trunk
 {
 	Trunk* prev;

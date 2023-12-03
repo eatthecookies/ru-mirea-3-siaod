@@ -73,7 +73,7 @@ void createTreeFromFile(SplayTree& tree, ifstream& ifbin)
 	}
 
 	ifbin.close();
-	cout << rotations;
+	cout << "Rotations: " << rotations << endl;
 }
 
 Node* rightRotate(Node* P) {
@@ -180,7 +180,7 @@ Node* splayRotations(Node* root, long long key, int& rotations)
 		{
 			// —начала рекурсивно поднимем ключ в качестве корн€ left-left
 			root->left->left = splayRotations(root->left->left, key, rotations);
-			// ѕервый поворот дл€ root, второй поворот выполн€етс€ после else (типа дедушка)
+			// ѕервый поворот дл€ root, второй поворот выполн€етс€ после else 
 			root = rightRotate(root);
 			rotations++;
 		}
@@ -188,13 +188,13 @@ Node* splayRotations(Node* root, long long key, int& rotations)
 		{
 			// —начала рекурсивно поднимаем ключ в качестве корн€ left-right 
 			root->left->right = splayRotations(root->left->right, key, rotations);
-			// ¬ыполн€ем первый поворот дл€ root->left (типа дедушка)
+			// ¬ыполн€ем первый поворот дл€ root->left 
 			if (root->left->right != NULL) {
 				root->left = leftRotate(root->left);
 				rotations++;
 			}
 		}
-		// ¬ыполн€ем второй поворот дл€ корн€ (типа папа)
+		// ¬ыполн€ем второй поворот дл€ корн€ 
 		if (root->left == NULL) 
 			return root; 
 		else{
@@ -243,8 +243,9 @@ Node* findNode(SplayTree& tree, long long searchKey)
 
 Owner getOwnerFromFile(int offset, ifstream&ifbin) {
 	Owner owner;
-	ifbin.read((char*)&owner, sizeof(owner));
 	ifbin.seekg(offset, ios::beg);
+	ifbin.read((char*)&owner, sizeof(owner));
+
 	ifbin.close();
 	return owner;
 }

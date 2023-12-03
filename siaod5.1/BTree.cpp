@@ -16,6 +16,21 @@ void createBinFile(ifstream& iftxt, ofstream& ofbin)
 	ofbin.close();
 	iftxt.close();
 }
+void printTree1(Node* node, int level) {
+	if (node == nullptr) {
+		return;
+	}
+
+	printTree1(node->right, level + 1);
+
+	for (int i = 0; i < level; i++) {
+		cout << "    ";
+	}
+
+	cout << node->key << std::endl;
+
+	printTree1(node->left, level + 1);
+}
 
 
 void outputBinFile(ifstream& ifbin)
@@ -41,7 +56,14 @@ void outputBinFile(ifstream& ifbin)
 
 	ifbin.close();
 }
-
+Owner getOwnerFromFile(int offset, ifstream& ifbin) {
+	Owner owner;
+	
+	ifbin.seekg(offset, ios::beg);
+	ifbin.read((char*)&owner, sizeof(owner));
+	ifbin.close();
+	return owner;
+}
 
 void createTreeFromFile(ifstream& ifbin, BTree &tree)
 {
